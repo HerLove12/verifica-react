@@ -63,6 +63,8 @@ function App() {
       setLoggedIn(true);
       console.log("this is the json token: " + lt)
 
+      document.cookie = `token=${lt}`
+      console.log(document.cookie)
       getData(lt)
     }
 
@@ -92,6 +94,8 @@ function App() {
    setErrorMessage(null);
    setLoggedIn(false);
    setSuccessful(false);
+
+   //TODO: DELETE COOKIE
   }
 
   return (
@@ -122,7 +126,7 @@ function App() {
           <p id="caricamentol"></p>  
         </div>
         </div>
-      :loggedIn ?
+      :loggedIn ? //TODO: add cookie check
         <div>
           <h1>Welcome {username}</h1>
           <ul>
