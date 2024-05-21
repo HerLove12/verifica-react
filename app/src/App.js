@@ -22,12 +22,14 @@ function App() {
     const s_username = document.getElementById('susername').value;
     const s_password = document.getElementById('spassword').value;
     const s_email = document.getElementById('semail').value;
+    document.getElementById('caricamentos').innerText = "caricamento...";
 
     const response = await fetch('http://localhost:8080/signup',{
       method:'POST',
       body: JSON.stringify({username:s_username,password:s_password,email:s_email})}); //{"username": "benve", "password": "asdasdasd", "email": "claudio@benve.it"}
     const s_json = await response.json(); //{"status":" true}
 
+    document.getElementById('caricamentos').innerText = "";
     setSuccessful(s_json.status);
     if(s_json.status == false){
       setErrorMessage("Errore nella registrazione")
@@ -39,15 +41,19 @@ function App() {
 
   async function login() {
     setErrorMessage(null);
+    setSuccessful(false);
 
     const l_username = document.getElementById('lusername').value;
     const l_password = document.getElementById('lpassword').value;
+
+    document.getElementById('caricamentol').innerText = "caricamento...";
 
     const response = await fetch('http://localhost:8080/login',{
       method:'POST',
       body: JSON.stringify({username:l_username,password:l_password})}); //{"username": "benve", "password": "asdasdasd"}
     const l_json = await response.json(); //{"token":"OBVkIUQ8M6wzGFtjKyrs"}
     console.log(l_json.token)
+    document.getElementById('caricamentol').innerText = "";
     if(l_json.token === ""){
       setErrorMessage("Errore nel Log-in, dati errati")
     }
@@ -77,6 +83,17 @@ function App() {
     setRegDate(d_json.reg_date);
   }
 
+  function reset(){
+   setUsername(null);
+   setToken(null);
+   setId(null);
+   setEmail(null);
+   setRegDate(null);
+   setErrorMessage(null);
+   setLoggedIn(false);
+   setSuccessful(false);
+  }
+
   return (
     <div className="App">
       <p class='errore'>{errorMessage}</p>
@@ -89,6 +106,7 @@ function App() {
             <input type="password" required id="spassword" placeholder="Password" />
             <input type="email" required id="semail" placeholder="Email" />
             <button type="button" onClick={register}>Register</button>
+            <p id="caricamentos"></p>
           </form>
           {successful ? <p class="win">registrato con successo</p> : null}
           <br></br>
@@ -100,7 +118,8 @@ function App() {
             <input type="text" id="lusername" placeholder="Username" />
             <input type="password" id="lpassword" placeholder="Password" />
             <button type="button" onClick={login}>Login</button>
-          </form>  
+          </form>
+          <p id="caricamentol"></p>  
         </div>
         </div>
       :loggedIn ?
@@ -112,6 +131,7 @@ function App() {
             <li>email: {email}</li>
             <li>Registration date: {reg_date}</li>
           </ul> 
+          <button onClick={reset}>logout</button>
         </div>
       :
         <div>
